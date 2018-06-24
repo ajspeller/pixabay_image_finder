@@ -21,7 +21,9 @@ class Search extends Component {
       () => {
         axios
           .get(
-            `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=true`
+            `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${
+              this.state.searchText
+            }&image_type=photo&per_page=${this.state.amount}&safesearch=true`
           )
           .then(res => this.setState({ images: res.data.hits }))
           .catch(err => console.log(err));
@@ -29,7 +31,10 @@ class Search extends Component {
     );
   };
 
-  onAmountChange() {}
+  onAmountChange = (event, idx, val) =>
+    this.setState({
+      amount: val
+    });
 
   render() {
     return (
