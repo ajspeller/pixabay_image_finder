@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import axios from 'axios';
+import ImageResults from '../image-results/ImageResults';
 
 class Search extends Component {
   state = {
@@ -14,19 +15,24 @@ class Search extends Component {
   };
 
   onTextChange = event => {
+    const val = event.target.value;
     this.setState(
       {
-        [event.target.name]: event.target.value
+        [event.target.name]: val
       },
       () => {
-        axios
-          .get(
-            `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${
-              this.state.searchText
-            }&image_type=photo&per_page=${this.state.amount}&safesearch=true`
-          )
-          .then(res => this.setState({ images: res.data.hits }))
-          .catch(err => console.log(err));
+        if (!val) {
+          this.setState({ images: [] });
+        } else {
+          axios
+            .get(
+              `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${
+                this.state.searchText
+              }&image_type=photo&per_page=${this.state.amount}&safesearch=true`
+            )
+            .then(res => this.setState({ images: res.data.hits }))
+            .catch(err => console.log(err));
+        }
       }
     );
   };
@@ -60,6 +66,9 @@ class Search extends Component {
           <MenuItem value={65} primaryText="65" />
         </SelectField>
         <br />
+        {this.state.images.length > 0 ? (
+          <ImageResults images={this.state.images} />
+        ) : null}
       </div>
     );
   }
